@@ -25,7 +25,7 @@ class Bracketeer.Views.Match extends Bracketeer.Views.Bracket
             self.selection_in_progress = true
             self.selection_start = d.position
             self.selection_type = d.seed
-            $("#bracket").append("<div id='modal'>You have selected #{d.position}. Click on a node circle to map.</div>")
+            $("#bracket").append(JST['backbone/templates/modal'](d: d))
 
       onEnter.append('circle')
         .attr
@@ -40,6 +40,10 @@ class Bracketeer.Views.Match extends Bracketeer.Views.Bracket
             $("#modal").remove()
 
             self.bracket.add_progression self.selection_type, self.selection_start, selection_end
+            self.selection_in_progress = false
+            self.selection_start = null
+            self.selection_end = null
+            self.selection_type = null
 
   render: ->
     @add_match_handlers()
