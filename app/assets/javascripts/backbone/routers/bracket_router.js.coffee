@@ -5,7 +5,7 @@ class Bracketeer.Routers.BracketsRouter extends Backbone.Router
     '' : 'index'
 
   index: ->
-    @bracket = new Bracketeer.Models.Bracket
+    @bracket ||= new Bracketeer.Models.Bracket
     view = new Bracketeer.Views.Index @bracket
     view.render()
     
