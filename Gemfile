@@ -16,8 +16,11 @@ end
 
 gem 'jquery-rails'
 
-gem 'unicorn'
 
+
+group :production do
+  gem 'thin'
+end
 
 group :development do
   gem 'guard'
@@ -26,4 +29,5 @@ group :development do
 
   gem 'rspec-rails'
   gem 'rails-backbone'
+  gem 'unicorn'
 end
