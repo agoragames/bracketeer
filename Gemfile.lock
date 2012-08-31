@@ -1,3 +1,12 @@
+GIT
+  remote: git://github.com/codebrew/backbone-rails.git
+  revision: d6ca4c8e7eb002a4d4e5e34c988392aa8736a8d9
+  specs:
+    rails-backbone (0.7.2)
+      coffee-script (~> 2.2.0)
+      ejs (~> 1.0.0)
+      railties (>= 3.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -94,10 +103,6 @@ GEM
       activesupport (= 3.2.8)
       bundler (~> 1.0)
       railties (= 3.2.8)
-    rails-backbone (0.7.2)
-      coffee-script (~> 2.2.0)
-      ejs (~> 1.0.0)
-      railties (>= 3.1.0)
     railties (3.2.8)
       actionpack (= 3.2.8)
       activesupport (= 3.2.8)
@@ -172,7 +177,7 @@ DEPENDENCIES
   jquery-rails
   less
   rails (= 3.2.8)
-  rails-backbone
+  rails-backbone!
   rspec-rails
   sass-rails (~> 3.2.3)
   therubyracer

@@ -28,6 +28,6 @@ group :development do
   gem 'guard-coffeescript'
 
   gem 'rspec-rails'
-  gem 'rails-backbone'
+  gem 'rails-backbone', git: "git://github.com/codebrew/backbone-rails.git", require: "backbone-rails"
   gem 'unicorn'
 end

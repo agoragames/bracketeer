@@ -26,10 +26,11 @@ class Bracketeer.Views.Match extends Bracketeer.Views.Bracket
             self.selection_start = d.position
             self.selection_type = d.seed
             $("#bracket").append(JST['backbone/templates/modal'](d: d))
+            $(".state-end").attr('class', 'state-end')
 
       onEnter.append('circle')
         .attr
-          class: 'state-end'
+          class: 'state-end invisible'
           cy: 10
           cx: 10
           r: 6
@@ -44,6 +45,7 @@ class Bracketeer.Views.Match extends Bracketeer.Views.Bracket
             self.selection_start = null
             self.selection_end = null
             self.selection_type = null
+            $(".state-end").attr('class', 'state-end invisible')
 
   render: ->
     @add_match_handlers()
