@@ -27,6 +27,7 @@ class Bracketeer.Views.Match extends Bracketeer.Views.Bracket
             self.selection_type = d.seed
             $("#bracket").append(JST['backbone/templates/modal'](d: d))
             $(".state-end").attr('class', 'state-end')
+            $(".progression").attr('class','progression invisible')
 
       onEnter.append('circle')
         .attr
@@ -46,6 +47,7 @@ class Bracketeer.Views.Match extends Bracketeer.Views.Bracket
             self.selection_start = null
             self.selection_type = null
             $(".state-end").attr('class', 'state-end invisible')
+            $(".progression").attr('class','progression')
 
       onEnter.append('text')
         .attr
