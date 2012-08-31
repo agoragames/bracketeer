@@ -4,8 +4,9 @@ class BracketsController < ApplicationController
   end
 
   def export
+    title = params[:title].parameterize
     json = JSON.parse(params[:bracket])
     send_data json, type: 'application/vnd.bracket_tree',
-      filename: 'bracket_tree.json', status: 200
+      filename: "#{title}.json", status: 200
   end
 end
