@@ -72,6 +72,7 @@ class Bracketeer.Models.Bracket extends Backbone.Model
 
   update: ->
     nodes = @tree.toArray()
+    @svg.attr 'width', Math.max(@width + 400, 1000)
     @draw_nodes nodes
     @draw_connections nodes
 
@@ -225,7 +226,7 @@ class Bracketeer.Models.Bracket extends Backbone.Model
 
 
   calc_left: (d) ->
-    l = @width - d.y
+    l = @width - d.y + 250
     return { x: d.x, y: l }
 
   join_nodes: (d) ->

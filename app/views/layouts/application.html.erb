@@ -8,11 +8,25 @@
 </head>
 <body>
 
-  <div class="row">
-    <div class="span12">
-      <%= yield %>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <ul class="nav">
+        <li class="active">
+          <a href="#">NODES</a>
+        </li>
+        <li><a href="#">MATCHES</a></li>
+        <li><a href="#">SEEDS</a></li>
+      </ul>
     </div>
   </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <%= yield %>
+  </div>
+</div>
+
 <script type="text/javascript">
   $(function() {
     // Blog is the app name
