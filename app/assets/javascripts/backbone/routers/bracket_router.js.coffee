@@ -2,9 +2,9 @@ class Bracketeer.Routers.BracketsRouter extends Backbone.Router
   initialize: (options) ->
 
   routes:
-    '' : 'new'
+    '' : 'index'
 
-  new: ->
+  index: ->
     @bracket = new Bracketeer.Models.Bracket
     @bracket.render('#bracket')
     

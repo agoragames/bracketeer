@@ -1,5 +1,5 @@
 class BracketsController < ApplicationController
-  def new
+  def index
     # LOLOLO BRACKET SETUP STUB
   end
 end
