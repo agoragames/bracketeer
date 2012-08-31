@@ -11,15 +11,18 @@
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
+      <ul class="pull-left">
+        <li class="brand">Bracketeer</li>
+      </ul>
       <ul class="nav" id="nav">
         <li class="active"><a id="node_mode" href="#">NODES</a></li>
         <li><a id="match_mode" href="#">MATCHES</a></li>
       </ul>
       <ul class="pull-right">
         <div>
-          <form id="export" method="post" action="/export">
+          <form id="export" class="navbar-form" method="post" action="/export">
             <input type="hidden" id="bracket_data" name="bracket" />
-            Template Name: <input type="text" name="title" value="bracket_json" />
+            <input type="text" name="title" value="Template Name" />
             <input type="submit" value="EXPORT" />
           </form>
         </div>
@@ -31,7 +34,7 @@
 <div class="row">
   <div class="span2">&nbsp;</div>
   <div class="span8">
-    <h1>Welcome to my AgoraGames Hackathon Stream.</h1>
+    <h1>Bracketeer</h1>
   </div>
   <div class="span2">&nbsp;</div>
 </div>
