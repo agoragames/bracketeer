@@ -40,12 +40,19 @@ class Bracketeer.Views.Match extends Bracketeer.Views.Bracket
             selection_end = d.position
             $("#modal").remove()
 
+            $("#node#{selection_end} .progression").text(self.selection_start)
             self.bracket.add_progression self.selection_type, self.selection_start, selection_end
             self.selection_in_progress = false
             self.selection_start = null
-            self.selection_end = null
             self.selection_type = null
             $(".state-end").attr('class', 'state-end invisible')
+
+      onEnter.append('text')
+        .attr
+          class: 'progression'
+          dx: 5
+          dy: 15
+
 
   render: ->
     @add_match_handlers()
