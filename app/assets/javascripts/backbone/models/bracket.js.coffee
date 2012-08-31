@@ -26,12 +26,10 @@ class Bracketeer.Models.Bracket extends Backbone.Model
 
   prepare_layout: ->
     # h/w transposed to rotate 90'
-    width = (@tree.depth.total - 1) * (@box_width + 15) # node width + connector space
-    @tree._root.x0 = 0
-    @tree._root.y0 = 0
+    @width = (@tree.depth.total) * (125+15) # node width + connector space
 
-    layout = d3.layout.tree().size([700,width])
-    layout.children (d) ->
+    @layout = d3.layout.tree().size([500,@width])
+    @layout.children (d) ->
       if d?
         children = []
 
@@ -45,7 +43,21 @@ class Bracketeer.Models.Bracket extends Backbone.Model
       else
         return null
 
-    layout.nodes @tree._root
+    @layout.nodes @tree._root
+
+  children: (d) ->
+    if d?
+      children = []
+
+      if d.left?
+        children.push d.left
+
+      if d.right?
+        children.push d.right
+
+      return children
+    else
+      return null
 
   render: (selector) ->
     @selector = selector
@@ -59,10 +71,14 @@ class Bracketeer.Models.Bracket extends Backbone.Model
     @update()
 
   update: ->
-    @draw_nodes()
+    nodes = @tree.toArray()
+    @draw_nodes nodes
+    @draw_connections nodes
 
-  draw_nodes: ->
-    node = @svg.selectAll('g.node').data @tree.toArray(), (d,i) ->
+    nodes
+
+  draw_nodes: (nodes) ->
+    node = @svg.selectAll('g.node').data nodes, (d,i) ->
       parent_position = if d.parent?
        d.parent.position
       else
@@ -83,8 +99,6 @@ class Bracketeer.Models.Bracket extends Backbone.Model
     onUpdate = node.transition()
 
     onUpdate.each (d) =>
-      # calculates the coordinate transposition. trees start L->R, we want to
-      # flip it around
       p = @calc_left(d)
       d.x1 = p.x
 
@@ -102,7 +116,14 @@ class Bracketeer.Models.Bracket extends Backbone.Model
     onUpdate.attr 'id', (d) ->
       "node#{d.position}"
 
-    node.exit().remove() # not calling? WTF?
+    onUpdate.select('.match-handler')
+      .text (d) ->
+        if d.left? || d.right?
+          "-"
+        else
+          "+"
+
+    node.exit().remove()
 
   draw_box: (handler) ->
     handler.append('rect')
@@ -125,21 +146,70 @@ class Bracketeer.Models.Bracket extends Backbone.Model
       .attr
         dy: 15
         dx: 5
-        class: 'add-match-handle'
+        class: 'match-handler'
       .text('+')
-      .on 'click', (d) =>
-        @add_match_to_tree d.position
+      .on 'click', @toggle_children
+        
+  draw_connections: (nodes) ->
+    link = @svg.selectAll('path.link')
+      .data @layout.links(nodes), (d, i) ->
+        d.target.id
 
-  add_match_to_tree: (position) ->
-    # This part sucks. BracketTree is based on positions within the tree, and
-    # we are throwing a monkey-wrench in that by appending in a weird spot.
-    # we have to use some re-calculation code after adding the nodes.
-    #
-    # In addition, we have a depth bug because we aren't going through the
-    # normal channels of addition via position.  This poses a problem on a
-    # number of levels
-    parent = @tree.at(position)
-    unless parent.left? || parent.right?
+    link.enter().insert('path', 'g')
+      .attr
+        class: 'link'
+        id: (d) ->
+          "line#{d.source.position}-#{d.target.position}"
+        d: (d) =>
+          o =
+            x: nodes[0].x,
+            y: nodes[0].y
+
+          result = @connector
+            source: o,
+            target: o
+
+    link.transition()
+      .duration(25)
+      .attr
+        d: (d) =>
+          @connector(d)
+        id: (d) ->
+          "line#{d.source.position}-#{d.target.position}"
+        
+    link.exit().remove()
+
+  connector: (d) =>
+    source = @join_nodes(d.source)
+    target = @join_nodes(d.target)
+
+    hy = (target.y + @box_width - source.y) / 2
+    hv = target.x+(@box_height/2)
+    x = source.x+(@box_height/2)
+
+    if d.target.parent? && d.target.parent.children?
+     if d.target.parent.children[0] == d.target
+       hv += (@box_height / 2)
+     else
+       hv -= (@box_height / 2)
+    
+    return "M#{source.y},#{x}H#{source.y+hy}V#{hv}H#{target.y}"
+
+  toggle_children: (d) =>
+    parent = @tree.at(d.position)
+
+    if parent.left? || parent.right?
+      parent.left = null
+      parent.right = null
+      parent.children = null
+      parent.x = null
+      parent.y = null
+
+      @tree.depth.total = 0
+      @tree.depth.left = 0
+      @tree.depth.right = 0
+
+    else
       parent.left =
         left: null,
         right: null,
@@ -149,13 +219,14 @@ class Bracketeer.Models.Bracket extends Backbone.Model
         right: null,
         payload: {}
 
-      @tree.recalculate_positions()
-      @prepare_layout()
-      @update()
+    @tree.recalculate_positions()
+    @prepare_layout()
+    @update()
+
 
   calc_left: (d) ->
-    y = (@width / 2) - d.y - 125
-    return { x: d.x, y: y }
+    l = @width - d.y
+    return { x: d.x, y: l }
 
   join_nodes: (d) ->
     me = @calc_left d
