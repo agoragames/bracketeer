@@ -136,13 +136,19 @@ class BracketTree
 
   recalculate_positions: ->
     counter = 1
-    @match_nodes_updated = []
+    @match_nodes_updated =
+      left: []
+      right: []
+      winner: []
+      loser: []
+      
     @traverse (node, depth) =>
       node.old_position = node.position
       node.position = counter
-      @update_match_positions node.old_position, node.position
       @depth_check(depth, counter)
       counter += 1
+
+    @update_matches()
 
 
   add_match: (nodes) ->
@@ -151,29 +157,35 @@ class BracketTree
       winner_to: null
       loser_to: null
 
-  update_match_positions: (old_pos, new_pos) ->
-    @matches.forEach (m) ->
-      if m.nodes[0] == old_pos || m.nodes[1] == old_pos
-        match = m
-      else if m.winner_to == old_pos
-        winner_match = m
-      else if m.loser_to == old_pos
-        loser_match = m
+  update_matches: ->
+    @matches.forEach (match) =>
+      nodes = @toArray()
+      top_seed = _.find nodes, (node) ->
+        node.old_position == match.nodes[0]
 
-    if match?
-      if match.nodes[0] == old_pos && @match_nodes_updated.indexOf(old_pos) == -1
-        match.nodes[1] = new_pos
-      else if match.nodes[1] == old_pos && @match_nodes_updated.indexOf(old_pos) == -1
-        match.nodes[1] = new_pos
-    
-    if winner_match? && @match_nodes_updated.indexOf(old_pos) == -1
-      winner_match.winner_to = new_pos
+      bottom_seed = _.find nodes, (node) ->
+        node.old_position == match.nodes[1]
 
-    if loser_match? && @match_nodes_updated.indexOf(old_pos) == -1
-      loser_match.loser_to = new_pos
+      if match.winner_to?
+        winner = _.find nodes, (node) ->
+          node.old_position == match.winner_to
 
-    @match_nodes_updated.push(old_pos)
+      if match.loser_to?
+        loser = _.find nodes, (node) ->
+          node.old_position == match.loser_to
 
+      if top_seed?
+        match.nodes[0] = top_seed.position
+
+      if bottom_seed?
+        match.nodes[1] = bottom_seed.position
+
+      if winner?
+        match.winner_to = winner.position
+
+      if loser?
+        match.loser_to = loser.position
+  
   as_json: ->
     json =
       matches: @matches
