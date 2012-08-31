@@ -18,6 +18,12 @@ class Bracketeer.Models.Bracket extends Backbone.Model
       round: 1
     })
 
+    @tree.matches.push
+      nodes: [1,3]
+      winner_to: 2
+      loser_to: null
+      
+
     @box_width = 125
     @box_height = 20
     @width = 1000
@@ -212,6 +218,16 @@ class Bracketeer.Models.Bracket extends Backbone.Model
         differential = 0 - ((d.x1 - sibling.x1) / 2) + (@box_height / 2)
 
     return { x: x + differential, y: me.y }
+
+  add_progression: (type, start, end) ->
+    match = _.find @tree.matches, (d) ->
+      d.nodes[0] == start || d.nodes[1] == start
+
+    if match?
+      match["#{type}_to"] = end
+      true
+    else
+      false
 
 
 class Bracketeer.Collections.BracketsCollection extends Backbone.Collection

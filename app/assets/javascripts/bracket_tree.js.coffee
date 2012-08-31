@@ -8,6 +8,7 @@ class BracketTree
       total: 0
       left: 0
       right: 0
+    @matches = []
 
     @size = 0
 
@@ -135,9 +136,56 @@ class BracketTree
 
   recalculate_positions: ->
     counter = 1
+    @match_nodes_updated = []
     @traverse (node, depth) =>
+      node.old_position = node.position
       node.position = counter
+      @update_match_positions node.old_position, node.position
       @depth_check(depth, counter)
       counter += 1
+
+
+  add_match: (nodes) ->
+    @matches.push
+      nodes: nodes
+      winner_to: null
+      loser_to: null
+
+  update_match_positions: (old_pos, new_pos) ->
+    @matches.forEach (m) ->
+      if m.nodes[0] == old_pos || m.nodes[1] == old_pos
+        match = m
+      else if m.winner_to == old_pos
+        winner_match = m
+      else if m.loser_to == old_pos
+        loser_match = m
+
+    if match?
+      if match.nodes[0] == old_pos && @match_nodes_updated.indexOf(old_pos) == -1
+        match.nodes[1] = new_pos
+      else if match.nodes[1] == old_pos && @match_nodes_updated.indexOf(old_pos) == -1
+        match.nodes[1] = new_pos
+    
+    if winner_match? && @match_nodes_updated.indexOf(old_pos) == -1
+      winner_match.winner_to = new_pos
+
+    if loser_match? && @match_nodes_updated.indexOf(old_pos) == -1
+      loser_match.loser_to = new_pos
+
+    @match_nodes_updated.push(old_pos)
+
+  as_json: ->
+    json =
+      matches: @matches
+      seats: []
+      starting_seats: []
+
+    @top_down @_root, (node) ->
+      seat =
+        position: node.position
+
+      json.seats.push(seat)
+
+    json
 
 window.BracketTree = BracketTree

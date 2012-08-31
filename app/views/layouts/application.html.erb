@@ -16,8 +16,13 @@
         <li><a id="match_mode" href="#">MATCHES</a></li>
         <li><a id="seed_mode" href="#">SEEDS</a></li>
       </ul>
-      <ul class="nav pull-right">
-        <li><a href="#">EXPORT</a></li>
+      <ul class="pull-right">
+        <div>
+          <form id="export" method="post" action="/export">
+            <input type="hidden" id="bracket_data" name="bracket" />
+            <input type="submit" value="EXPORT" />
+          </form>
+        </div>
       </ul>
     </div>
   </div>

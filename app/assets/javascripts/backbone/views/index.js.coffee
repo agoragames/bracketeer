@@ -40,12 +40,15 @@ class Bracketeer.Views.Index extends Bracketeer.Views.Bracket
       parent.left =
         left: null,
         right: null,
+        position: -1,
         payload: {}
       parent.right =
         left: null,
         right: null,
+        position: -2,
         payload: {}
 
+    @bracket.tree.add_match [-1, -2]
     @bracket.tree.recalculate_positions()
     @bracket.prepare_layout()
     @bracket.update()
