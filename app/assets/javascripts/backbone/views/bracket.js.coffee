@@ -5,7 +5,6 @@ class Bracketeer.Views.Bracket extends Backbone.View
   events:
     'click #match_mode'     : 'enter_match_mode'
     'click #node_mode'      : 'enter_node_mode'
-    'click #seed_mode'      : 'enter_seed_mode'
     'submit form#export'    : 'export_bracket'
 
   set_active_tab: (tab) ->
@@ -21,9 +20,6 @@ class Bracketeer.Views.Bracket extends Backbone.View
   enter_node_mode: (e) ->
     @set_active_tab('#node_mode')
     Bracketeer.router.index()
-    e.preventDefault()
-
-  enter_seed_mode: (e) ->
     e.preventDefault()
 
   export_bracket: (e) ->
