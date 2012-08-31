@@ -223,9 +223,12 @@ class Bracketeer.Models.Bracket extends Backbone.Model
     match = _.find @tree.matches, (d) ->
       d.nodes[0] == start || d.nodes[1] == start
 
-    placement = type == 'top' ? 'winner' : 'loser'
+    if type == 'top'
+      placement = 'winner_to'
+    else
+      placement = 'loser_to'
     if match?
-      match["#{placement}_to"] = end
+      match[placement] = end
       true
     else
       false

@@ -52,6 +52,18 @@ class Bracketeer.Views.Match extends Bracketeer.Views.Bracket
           class: 'progression'
           dx: 5
           dy: 15
+    @bracket.dispatch.on 'update_nodes', (onUpdate) =>
+      tree = @bracket.tree
+      onUpdate.select('.progression').text (d) ->
+        match = _.find tree.matches, (match) ->
+          match.winner_to == d.position || match.loser_to == d.position
+
+        if match?
+          return match.nodes[0]
+
+        return ""
+
+
 
 
   render: ->
