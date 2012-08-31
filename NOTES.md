@@ -1,48 +1,42 @@
-load Empty BracketTree
-render base match ( see bracket\_tree.renderer for setup)
-header information
-Bootstrap for easy nav additions (configure tomorrow)
+# Win/Loss Selector
+
+1. Click W/L
+2. Add Recipient Nodes to Click
+3. Click Recipient
+4. Set progression
+5. Display progression w/o removing ability to change
 
 
-Why the hell can I never rememer bootstrap classes? (or type for that matter)
 
-Re-use rendering...I don't want to redo everything in the rendering options
+Issues:
 
-
-YAY TWEETS. @cadwallion :D
-
-
-1
-   2
-3     4
-   5
-
-IDs aren't overlapping, yet exit() is not being triggered.  Why?
-
-remove is being called on the group, based on the data, so why wouldn't that
-apply to the g.node once the data that drives them is expired?
-
-getting called 8 times, with 3 repeats: the original 3 nodes not disappearing,
-then a full runthrough.  This makes no sense, and stabbings sound like a good
-thing right now.
+* How do I easily display the progression?
+* Would a dropdown of valid positions be better suited?
+* How do we validate that a node cannot progress to the same spot from two nodes?
 
 
-Needs a better way to expand forward as well as backward
+Alternatives:
 
-Where in teh fuck am I creating the router?!?!?!?!?!?
+1. Dropdown with a selection event that removes...ugh I hate this idea before
+even finishing it
+2. Use a modal window anchored to control the information. Other than display,
+this doesn't really resolve anything
+3. jsPlumb connectors. This is a visual nightmare....
 
 
-To refactor, we can either:
-1. Move all the rendering code into a parent view and subclass
-2. add onEnter/onUpdate/onExit dispatch hooks and tap into them on views
-3. Don't refactor, and just trigger methods inside the bloated Bracket model
 
-I'm not a fan of 3, as that model is already pretty bloated.  OTOH, its SRP is
-rendering.  But should it be rendering all modes? I don't thnk so.
+# Updating Match Coordinates
 
-1 isn't bad, but will result in boilerplate to abstract enough for subclasses
-to work.
+When we recalculate positions, we need to update all the matches and their
+progression coordinates to the new positions. However, we will end up reusing
+numbers, so it has to have some way of knowing the match has been updated to
+prevent overwriting updates.  We can't just wipe out the matches because of
+existing match progression information.
 
-2 might work, but spreads code out pretty wide.
+We can add the old position to the node, but how do we update the matches? We
+have no mechanism for searching the tree by old position, and I don't really
+want to add one.  We could build our own traversal call to find it, but that is
+shoddy.
 
-Going with #1 as I think it'll be the DRY approach
+We could add an attribute to all matches for updated state, then do a second
+walkthrough to remove the attribute when we are done...
