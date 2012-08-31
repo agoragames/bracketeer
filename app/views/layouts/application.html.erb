@@ -11,12 +11,10 @@
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
-      <ul class="nav">
-        <li class="active">
-          <a href="#">NODES</a>
-        </li>
-        <li><a href="#">MATCHES</a></li>
-        <li><a href="#">SEEDS</a></li>
+      <ul class="nav" id="nav">
+        <li class="active"><a id="node_mode" href="#">NODES</a></li>
+        <li><a id="match_mode" href="#">MATCHES</a></li>
+        <li><a id="seed_mode" href="#">SEEDS</a></li>
       </ul>
       <ul class="nav pull-right">
         <li><a href="#">EXPORT</a></li>
@@ -24,16 +22,24 @@
     </div>
   </div>
 </div>
+
 <div class="row">
-  <div class="span12">
+  <div class="span2">&nbsp;</div>
+  <div class="span8">
+    <h1>Welcome to my AgoraGames Hackathon Stream.</h1>
+  </div>
+  <div class="span2">&nbsp;</div>
+</div>
+
+<div class="row">
+  <div class="span12" id="bracketeer">
     <%= yield %>
   </div>
 </div>
 
 <script type="text/javascript">
   $(function() {
-    // Blog is the app name
-    window.router = new Bracketeer.Routers.BracketsRouter();
+    window.Bracketeer.router = new Bracketeer.Routers.BracketsRouter();
     Backbone.history.start();
   });
 </script>

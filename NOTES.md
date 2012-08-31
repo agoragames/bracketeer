@@ -26,3 +26,23 @@ getting called 8 times, with 3 repeats: the original 3 nodes not disappearing,
 then a full runthrough.  This makes no sense, and stabbings sound like a good
 thing right now.
 
+
+Needs a better way to expand forward as well as backward
+
+Where in teh fuck am I creating the router?!?!?!?!?!?
+
+
+To refactor, we can either:
+1. Move all the rendering code into a parent view and subclass
+2. add onEnter/onUpdate/onExit dispatch hooks and tap into them on views
+3. Don't refactor, and just trigger methods inside the bloated Bracket model
+
+I'm not a fan of 3, as that model is already pretty bloated.  OTOH, its SRP is
+rendering.  But should it be rendering all modes? I don't thnk so.
+
+1 isn't bad, but will result in boilerplate to abstract enough for subclasses
+to work.
+
+2 might work, but spreads code out pretty wide.
+
+Going with #1 as I think it'll be the DRY approach

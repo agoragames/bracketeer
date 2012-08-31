@@ -17,5 +17,7 @@
 //= require backbone
 //= require backbone_rails_sync
 //= require backbone_datalink
+//= require handlebars 
 //= require backbone/bracketeer
+//= require_tree ./backbone/templates
 //= require_tree .

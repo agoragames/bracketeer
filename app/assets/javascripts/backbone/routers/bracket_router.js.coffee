@@ -6,6 +6,11 @@ class Bracketeer.Routers.BracketsRouter extends Backbone.Router
 
   index: ->
     @bracket = new Bracketeer.Models.Bracket
-    @bracket.render('#bracket')
+    view = new Bracketeer.Views.Index @bracket
+    view.render()
     
-    window.bracket = @bracket
+    Bracketeer.view = view
+    Bracketeer.bracket = @bracket
+  match: ->
+    view = new Bracketeer.Views.Match @bracket
+    view.render()

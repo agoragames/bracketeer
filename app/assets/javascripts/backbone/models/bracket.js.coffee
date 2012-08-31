@@ -23,6 +23,11 @@ class Bracketeer.Models.Bracket extends Backbone.Model
     @width = 1000
     @height = 600
 
+    @reset_dispatch()
+
+  reset_dispatch: ->
+    @dispatch = d3.dispatch('enter_nodes', 'update_nodes')
+
 
   prepare_layout: ->
     # h/w transposed to rotate 90'
@@ -92,10 +97,11 @@ class Bracketeer.Models.Bracket extends Backbone.Model
         class: 'node'
         transform:  (d, i) =>
           "translate(0,#{i * 50})" # render to initial location, will update later
+
     
     @draw_box onEnter
     @draw_position onEnter
-    @draw_handlers onEnter
+    @dispatch.enter_nodes(onEnter)
 
     onUpdate = node.transition()
 
@@ -117,12 +123,8 @@ class Bracketeer.Models.Bracket extends Backbone.Model
     onUpdate.attr 'id', (d) ->
       "node#{d.position}"
 
-    onUpdate.select('.match-handler')
-      .text (d) ->
-        if d.left? || d.right?
-          "-"
-        else
-          "+"
+
+    @dispatch.update_nodes(onUpdate)
 
     node.exit().remove()
 
@@ -142,15 +144,6 @@ class Bracketeer.Models.Bracket extends Backbone.Model
       .text (d) ->
         d.position
 
-  draw_handlers: (node) ->
-    node.append('text')
-      .attr
-        dy: 15
-        dx: 5
-        class: 'match-handler'
-      .text('+')
-      .on 'click', @toggle_children
-        
   draw_connections: (nodes) ->
     link = @svg.selectAll('path.link')
       .data @layout.links(nodes), (d, i) ->
@@ -196,35 +189,6 @@ class Bracketeer.Models.Bracket extends Backbone.Model
     
     return "M#{source.y},#{x}H#{source.y+hy}V#{hv}H#{target.y}"
 
-  toggle_children: (d) =>
-    parent = @tree.at(d.position)
-
-    if parent.left? || parent.right?
-      parent.left = null
-      parent.right = null
-      parent.children = null
-      parent.x = null
-      parent.y = null
-
-      @tree.depth.total = 0
-      @tree.depth.left = 0
-      @tree.depth.right = 0
-
-    else
-      parent.left =
-        left: null,
-        right: null,
-        payload: {}
-      parent.right =
-        left: null,
-        right: null,
-        payload: {}
-
-    @tree.recalculate_positions()
-    @prepare_layout()
-    @update()
-
-
   calc_left: (d) ->
     l = @width - d.y + 250
     return { x: d.x, y: l }
@@ -248,6 +212,7 @@ class Bracketeer.Models.Bracket extends Backbone.Model
         differential = 0 - ((d.x1 - sibling.x1) / 2) + (@box_height / 2)
 
     return { x: x + differential, y: me.y }
+
 
 class Bracketeer.Collections.BracketsCollection extends Backbone.Collection
   model: Bracketeer.Models.Bracket
