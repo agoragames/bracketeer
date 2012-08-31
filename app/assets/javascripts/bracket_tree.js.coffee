@@ -133,4 +133,11 @@ class BracketTree
 
     return result
 
+  recalculate_positions: ->
+    counter = 1
+    @traverse (node, depth) =>
+      node.position = counter
+      @depth_check(depth, counter)
+      counter += 1
+
 window.BracketTree = BracketTree
